@@ -1,0 +1,65 @@
+#include <pitches.h>
+
+#include <Servo.h>
+
+Servo myservo1;
+Servo myservo2;
+Button me = Button(6, HIGH);
+
+int ledPinG = 7;
+int ledPinR = 8;
+int i = 0;
+int turn = 180;
+int ledPins[] = {2, 3, 4};
+
+void setup() {
+  me.begin();
+  for (int j = 0; j < 3; j++) {
+    pinMode(ledPins[j], OUTPUT);
+    digitalWrite(ledPins[j], LOW);
+  }
+  myservo1.write(turn);
+  myservo2.write(turn);
+  digitalWrite(ledPins[i], HIGH);
+  i++;
+  pinMode(ledPinG, OUTPUT);
+  pinMode(ledPinR, OUTPUT);
+  digitalWrite(ledPinG, HIGH);
+  myservo1.attach(9);
+  myservo2.attach(10);
+}
+
+void loop() {
+  if (i > 2)
+    i = 0;
+  if (turn < 0) {
+    digitalWrite(ledPinR, HIGH);
+    digitalWrite(ledPinG, LOW);
+    turn = 180;
+    myservo1.write(turn);
+    myservo2.write(turn);
+    delay(800);
+    digitalWrite(ledPinR, LOW);
+    digitalWrite(ledPinG, HIGH);
+  }
+  if (me.released() == HIGH) {
+    digitalWrite(ledPins[i], HIGH);
+    i++;
+    digitalWrite(ledPinR, HIGH);
+    digitalWrite(ledPinG, LOW);
+    turn = turn - 90;
+    myservo1.write(turn);
+    myservo2.write(turn);
+    delay(500);
+    digitalWrite(ledPinR, LOW);
+    digitalWrite(ledPinG, HIGH);
+
+  }
+  for (int j = 0; j < 3; j++) {
+    if (j != i - 1) {
+      digitalWrite(ledPins[j], LOW);
+    } else {
+      digitalWrite(ledPins[j], HIGH);
+    }
+  }
+}
